@@ -4,9 +4,9 @@ services:
     container_name: postgres
     image: postgres
     # restart: always
-    ports: 
+    ports:
       - "5432:5432"
-    environment: 
+    environment:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
       # POSTGRES_DB: ""
@@ -24,7 +24,7 @@ services:
       - PMA_ARBITRARY=1
     networks:
       - db_net
-  
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
@@ -41,5 +41,14 @@ services:
 volumes:
   postgres-data:
 
-networks:
-  db_net:
+  node_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "3000:3000"
+    networks:
+      - db_net
