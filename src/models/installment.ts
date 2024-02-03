@@ -1,8 +1,6 @@
 import { DataTypes, Model, type Optional } from 'sequelize'
-const sequelize: Sequelize = require('../config/sequelize');
-
+import { sequelize } from '../database';
 const { UUID, UUIDV4, INTEGER, FLOAT } = DataTypes;
- // Importe o arquivo de configuração do Sequelize
 
 export interface InstallmentAttributes {
   id: number;
