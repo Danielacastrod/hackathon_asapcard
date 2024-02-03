@@ -1,0 +1,45 @@
+version: "3"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    # restart: always
+    ports: 
+      - "5432:5432"
+    environment: 
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      # POSTGRES_DB: ""
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - db_net
+
+  phpmyadmin:
+    image: phpmyadmin
+    # restart: always
+    ports:
+      - 8081:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - db_net
+  
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    # restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    # volumes:
+    #   - ./dados:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+volumes:
+  postgres-data:
+
+networks:
+  db_net:
