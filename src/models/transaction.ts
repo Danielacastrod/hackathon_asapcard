@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Optional } from 'sequelize'
-const sequelize: Sequelize = require('../config/sequelize');
+import { sequelize } from '../database';
 
 export interface TransactionAttributes {
   id: number;
@@ -40,4 +40,4 @@ const Transaction = sequelize.define<
   },
 });
 
-export default Transaction
+export default Transaction;
