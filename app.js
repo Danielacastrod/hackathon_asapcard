@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 
 const INPUT_DIR = path.join(__dirname, 'INPUT');
 const CONCILIATION_DIR = path.join(__dirname, 'CONCILIATION');
-const INPUT_TREATED_DIR = path.join(__dirname,  'INPUT_TRATADOS');
+const INPUT_TREATED_DIR = path.join(__dirname, 'INPUT_TRATADOS');
 const CONCILIATION_TREATED_DIR = path.join(__dirname, 'CONCILIATION_TRATADOS');
 
 const SLEEP_INTERVAL = 5000; // 5 segundos
@@ -29,19 +29,33 @@ async function processInput() {
 
     console.log(`Processing input file: ${inputFilePath}`);
 
-    // Execute publish.js
-    await executeCommand(`node publish.js ${inputFilePath}`);
-    
-    // Execute consume.js
-    await executeCommand('node consume.js');
+    try {
+      // Execute publish.js
+      await executeCommand(`node publish.js ${inputFilePath}`);
+      
+      // Execute consume.js asynchronously
+      const consumeProcess = exec('node consume.js');
+      consumeProcess.stdout.on('data', (data) => {
+        console.log(`consume.js output: ${data}`);
+      });
 
-    // Move the treated file to INPUT_TRATADOS
-    const treatedFileName = `${path.basename(inputFilePath, '.csv')}_tratado.csv`;
-    const treatedFilePath = path.join(INPUT_TREATED_DIR, treatedFileName);
+      await new Promise((resolve) => {
+        consumeProcess.on('exit', (code) => {
+          console.log(`consume.js exited with code ${code}`);
+          resolve();
+        });
+      });
 
-    fs.renameSync(inputFilePath, treatedFilePath);
+      // Move the treated file to INPUT_TRATADOS
+      const treatedFileName = `${path.basename(inputFilePath, '.csv')}_tratado.csv`;
+      const treatedFilePath = path.join(INPUT_TREATED_DIR, treatedFileName);
 
-    console.log(`File processed and moved to INPUT_TRATADOS: ${treatedFilePath}`);
+      fs.renameSync(inputFilePath, treatedFilePath);
+
+      console.log(`File processed and moved to INPUT_TRATADOS: ${treatedFilePath}`);
+    } catch (error) {
+      console.error(`Error processing input: ${error}`);
+    }
   }
 }
 
@@ -53,16 +67,20 @@ async function processConciliation() {
 
     console.log(`Processing conciliation file: ${conciliationFilePath}`);
 
-    // Execute publishConciliation.js
-    await executeCommand(`node publishConciliation.js ${conciliationFilePath}`);
+    try {
+      // Execute publishConciliation.js
+      await executeCommand(`node publishConciliation.js ${conciliationFilePath}`);
 
-    // Move the treated file to CONCILIATION_TRATADOS
-    const treatedFileName = `${path.basename(conciliationFilePath, '.csv')}_tratado.csv`;
-    const treatedFilePath = path.join(CONCILIATION_TREATED_DIR, treatedFileName);
+      // Move the treated file to CONCILIATION_TRATADOS
+      const treatedFileName = `${path.basename(conciliationFilePath, '.csv')}_tratado.csv`;
+      const treatedFilePath = path.join(CONCILIATION_TREATED_DIR, treatedFileName);
 
-    fs.renameSync(conciliationFilePath, treatedFilePath);
+      fs.renameSync(conciliationFilePath, treatedFilePath);
 
-    console.log(`File processed and moved to CONCILIATION_TRATADOS: ${treatedFilePath}`);
+      console.log(`File processed and moved to CONCILIATION_TRATADOS: ${treatedFilePath}`);
+    } catch (error) {
+      console.error(`Error processing conciliation: ${error}`);
+    }
   }
 }
 
