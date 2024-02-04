@@ -14,6 +14,9 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+    networks:
+      - app_net
+      - db_net
 
   postgres:
     image: "postgres:latest"
