@@ -3,52 +3,65 @@ services:
   postgres:
     container_name: postgres
     image: postgres
-    # restart: always
-    ports:
+    restart: always
+    ports: 
       - "5432:5432"
-    environment:
+    environment: 
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "admin"
-      # POSTGRES_DB: ""
+      POSTGRES_DB: "hackathon_development"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - db_net
 
-  phpmyadmin:
-    image: phpmyadmin
-    # restart: always
-    ports:
-      - 8081:80
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:6
+    restart: always
     environment:
-      - PMA_ARBITRARY=1
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     networks:
       - db_net
 
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
-    # restart: always
+    restart: always
     ports:
       - 5672:5672
       - 15672:15672
-    # volumes:
-    #   - ./dados:/var/lib/rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
+    networks:
+      - app_net
+
+  # node_app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - db_net
 
 volumes:
   postgres-data:
+  pgadmin_data:
 
-  node_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - rabbitmq
-    ports:
-      - "3000:3000"
-    networks:
-      - db_net
+networks:
+  db_net:
+    driver: bridge
+  app_net:
+    driver: bridge
+
+
