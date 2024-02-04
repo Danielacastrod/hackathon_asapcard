@@ -1,6 +1,6 @@
-import { Person } from './Person';
-import { Installment } from './Installment';
-import { Transaction } from './Transaction';
+import Person from './person';
+import Installment from './installment';
+import Transaction from './transaction';
 
 Person.hasMany(Transaction);
 Transaction.belongsTo(Person);

@@ -1,10 +1,10 @@
-import { DataTypes, Model, type Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
 
 export interface TransactionAttributes {
   id: number;
   personid: number;
-  InstallmentDate: Date;
+  transactionDate: Date;
   amount: number;
 }
 
@@ -30,7 +30,7 @@ const Transaction = sequelize.define<
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   },
-  InstallmentDate: {
+  transactionDate: {
     allowNull: false,
     type: DataTypes.DATE,
   },

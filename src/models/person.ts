@@ -1,4 +1,4 @@
-import { DataTypes, Model, type Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
 
 export interface PersonAttributes {
@@ -11,23 +11,20 @@ export interface PersonInstance
   extends Model<PersonAttributes>,
     PersonAttributes {}
 
-const Person = sequelize.define<PersonInstance, PersonAttributes>(
-  'Person',
-  {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-    },
-    name: {
-      allowNull: false,
-      type: DataTypes.STRING,
-    },
-    age: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
-    },
-  }
-);
-export default Person
+const Person = sequelize.define<PersonInstance, PersonAttributes>('Person', {
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: DataTypes.INTEGER,
+  },
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+  age: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+});
+export default Person;

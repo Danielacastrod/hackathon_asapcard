@@ -1,15 +1,15 @@
 import * as fs from 'fs';
-import * as csv from 'csv-parser';
 import * as amqp from 'amqplib';
+import csv from 'csv-parser';
 
 interface CsvRow {
-  'ID da Transação': string;
-  'Data da Transação': string;
-  'Documento': string;
-  'Nome': string;
-  'Idade': string;
-  'Valor': string;
-  'Num. de Parcelas': string;
+  '686e9b31-caeb-4908-95d5-931b50a8df9c': string;
+  '2023-12-28T06:18:12Z': string;
+  '123teste': string;
+  'Bruce Wayne': string;
+  '42': string;
+  '87.28': string;
+  '7': string;
 }
 
 interface TransactionMessage {
@@ -28,18 +28,17 @@ interface TransactionMessage {
 async function publishMessages(): Promise<void> {
   const messages: TransactionMessage[] = [];
 
-  // Reading the CSV file
   fs.createReadStream('input-data.csv')
     .pipe(csv({ separator: ';' }))
     .on('data', (row: CsvRow) => {
       const message: TransactionMessage = {
-        transactionId: row['ID da Transação'],
-        transactionDate: row['Data da Transação'],
-        document: row['Documento'],
-        name: row['Nome'],
-        age: row['Idade'],
-        amount: row['Valor'],
-        numInstallments: row['Num. de Parcelas'],
+        transactionId: row['686e9b31-caeb-4908-95d5-931b50a8df9c'],
+        transactionDate: row['2023-12-28T06:18:12Z'],
+        document: row['123teste'],
+        name: row['Bruce Wayne'],
+        age: row['42'],
+        amount: row['87.28'],
+        numInstallments: row['7'],
       };
 
       messages.push(message);
@@ -54,7 +53,7 @@ async function publishMessages(): Promise<void> {
       await channel.assertQueue(queue, { durable: false });
 
       // Publishing each message to the queue
-      messages.forEach((message) => {
+      messages.forEach(message => {
         channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
       });
 
@@ -63,7 +62,10 @@ async function publishMessages(): Promise<void> {
       // Closing the connection
       await channel.close();
       await connection.close();
+
+      // Log das mensagens salvas para testes
+      console.log('Mensagens salvas:', messages);
     });
 }
 
-publishMessages();
+export default publishMessages;

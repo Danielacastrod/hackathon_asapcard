@@ -1,6 +1,5 @@
-import { DataTypes, Model, type Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
-const { UUID, UUIDV4, INTEGER, FLOAT } = DataTypes;
 
 export interface InstallmentAttributes {
   id: number;
@@ -26,7 +25,7 @@ const Installment = sequelize.define<
   transactionId: {
     allowNull: false,
     primaryKey: true,
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     references: { model: 'Transaction', key: 'id' },
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
@@ -41,4 +40,4 @@ const Installment = sequelize.define<
   },
 });
 
-export default Installment
+export default Installment;
