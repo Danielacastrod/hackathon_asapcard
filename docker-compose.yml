@@ -1,5 +1,12 @@
 version: "3"
 services:
+  app:
+    build: .
+    command: npm start
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/app
   postgres:
     container_name: postgres
     image: postgres
@@ -41,14 +48,6 @@ services:
 volumes:
   postgres-data:
 
-  node_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - rabbitmq
-    ports:
-      - "3000:3000"
-    networks:
-      - db_net
+
+
+
