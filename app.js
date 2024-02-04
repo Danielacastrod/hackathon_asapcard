@@ -33,17 +33,12 @@ async function processInput() {
       // Execute publish.js
       await executeCommand(`node publish.js ${inputFilePath}`);
       
-      // Execute consume.js asynchronously
-      const consumeProcess = exec('node consume.js');
-      consumeProcess.stdout.on('data', (data) => {
-        console.log(`consume.js output: ${data}`);
-      });
-
-      await new Promise((resolve) => {
-        consumeProcess.on('exit', (code) => {
-          console.log(`consume.js exited with code ${code}`);
-          resolve();
-        });
+      // Execute consume.js assincronamente
+      exec('node consume.js', (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error executing consume.js: ${error}`);
+        }
+        console.log(`consume.js output: ${stdout}`);
       });
 
       // Move the treated file to INPUT_TRATADOS
