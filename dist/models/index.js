@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Transaction = exports.Installment = exports.Person = void 0;
+const Person_1 = require("./Person");
+Object.defineProperty(exports, "Person", { enumerable: true, get: function () { return Person_1.Person; } });
+const Installment_1 = require("./Installment");
+Object.defineProperty(exports, "Installment", { enumerable: true, get: function () { return Installment_1.Installment; } });
+const Transaction_1 = require("./Transaction");
+Object.defineProperty(exports, "Transaction", { enumerable: true, get: function () { return Transaction_1.Transaction; } });
+Person_1.Person.hasMany(Transaction_1.Transaction);
+Transaction_1.Transaction.belongsTo(Person_1.Person);
+Transaction_1.Transaction.hasMany(Installment_1.Installment);
+Installment_1.Installment.belongsTo(Transaction_1.Transaction);
