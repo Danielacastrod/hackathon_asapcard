@@ -12,5 +12,11 @@ EXPOSE 5000
 
 CMD [ "npm", "start"]
 
-# criar imagem:   docker build -t hackaton/dockernode .
-# rodar na porta 5000:      docker run -p 5000:5000 hackaton/dockernode
+#criar imagem do projeto Dockerfile:   docker image build -t hackaton:1.0.0 .  (o ponto é o contexto)
+
+#criar os containeres do docker-compose.yml    docker-compose up -d
+
+#postgres der algum erro:
+#derrubar os conteineres               docker-compose down -v
+# parar o banco postgresql             sudo service postgresql stop
+#recriar os conteineres                docker-compose up -d
