@@ -2,7 +2,7 @@ import { DataTypes, Model, type Optional } from 'sequelize'
 import { sequelize } from '../database';
 
 export interface TransactionAttributes {
-  id: number;
+  id: any;
   personid: number;
   InstallmentDate: Date;
   amount: number;

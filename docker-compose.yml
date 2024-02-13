@@ -1,36 +1,61 @@
-version: '3'
+version: '3.1'
 
 services:
   app:
-    build:
-      context: .
-    image: app-hackathon
-    container_name: app-hackathon
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgres://admin:admin@postgres:5432/DB_HACKATON
+    build: .
+    command: npm start
+    restart: always
     ports:
-      - "3000:3000"
-    depends_on:
-      - postgres
-      - rabbitmq
-
-  postgres:
-    image: "postgres:latest"
-    container_name: postgres
-    restart: unless-stopped
+      - "5000:5000"
+    volumes:
+      - .:/usr/app/
+  mysql:
+    image: mysql:5.7
+    restart: always
     environment:
-      POSTGRES_DB: DB_HACKATON
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=orders
+      - MYSQL_PASSWORD=root
     ports:
-      - "5432:5432"
-
+      - "3306:3306"
+    platform: linux/x86_64
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"   
+  grafanaservices:
+    image: grafana/grafana
+    container_name: grafana
+    hostname: grafana
+    restart: always
+    ports:
+    - "3000:3000"
   rabbitmq:
-    image: "rabbitmq:3-management"
+    image: "rabbitmq:3.8.16-management"
     container_name: rabbitmq
-    restart: unless-stopped
+    restart: always
     ports:
-      - "5672:5672"
-      - "15672:15672"
+    - "5672:5672"
+    - "15672:15672"
+    - "15692:15692"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_VHOST=/
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml 
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'  
+  
+   

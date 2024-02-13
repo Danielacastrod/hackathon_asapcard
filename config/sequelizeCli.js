@@ -5,7 +5,7 @@ module.exports = {
     port: '5432',
     database: 'hackathon_development',
     username: 'postgres',
-    password: '123456',
+    password: 'admin',
   },
 };
   

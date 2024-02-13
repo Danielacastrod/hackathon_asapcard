@@ -3,8 +3,8 @@ import { sequelize } from '../database';
 const { UUID, UUIDV4, INTEGER, FLOAT } = DataTypes;
 
 export interface InstallmentAttributes {
-  id: number;
-  transactionId: number;
+  id: any;
+  transactionId: string;
   installmentNumber: number;
   value: number;
 }

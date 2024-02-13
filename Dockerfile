@@ -4,13 +4,13 @@ WORKDIR /usr/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install -y
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD [ "npm", "start"]
 
 # criar imagem:   docker build -t hackaton/dockernode .
-# rodar na porta 3000:      docker run -p 3000:3000 hackaton/dockernode
+# rodar na porta 5000:      docker run -p 5000:5000 hackaton/dockernode
